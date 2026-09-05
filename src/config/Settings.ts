@@ -21,7 +21,7 @@ export function getSettings(): CommitForgeSettings {
     provider: cfg.get<string>('provider', 'nvidia'),
     model: cfg.get<string>('model', 'deepseek-ai/deepseek-v4-pro-0813'),
     commitStyle,
-    maxDiffSize: cfg.get<number>('maxDiffSize', 15000),
+    maxDiffSize: cfg.get<number>('maxDiffSize', 30000),
     customInstructions: cfg.get<string>('customInstructions', ''),
   };
 }

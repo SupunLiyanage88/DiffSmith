@@ -1,6 +1,7 @@
 import * as vscode from 'vscode';
 import { AIProvider } from './AIProvider';
 import { NvidiaProvider } from './NvidiaProvider';
+import { OpenRouterProvider } from './OpenRouterProvider';
 import { getSettings } from '../config/Settings';
 
 export class ProviderNotConfiguredError extends Error {
@@ -19,6 +20,7 @@ export class ProviderManager {
   constructor(context: vscode.ExtensionContext) {
     this.providers = new Map<string, AIProvider>([
       ['nvidia', new NvidiaProvider(context)],
+      ['openrouter', new OpenRouterProvider(context)],
       // Future providers (openai, gemini, ollama, claude) register here.
     ]);
   }

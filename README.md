@@ -1,6 +1,6 @@
 # CommitForge
 
-AI-powered git commit message generation for VS Code. Currently supports **NVIDIA** (DeepSeek V4 Pro by default, rated model picker included), designed from day one to support more providers without rewrites.
+AI-powered git commit message generation for VS Code. Supports **NVIDIA** (DeepSeek V4 Pro by default, rated model picker included) and **OpenRouter** (400+ models through one key), designed from day one to support more providers without rewrites.
 
 ## Install
 
@@ -16,20 +16,20 @@ AI-powered git commit message generation for VS Code. Currently supports **NVIDI
    ```
 3. Replace `your-publisher-id` in `package.json` with your publisher id before publishing.
 
-## Set the NVIDIA API key
+## Set up a provider (NVIDIA / OpenRouter)
 
 1. Open the Command Palette → **CommitForge: Configure Provider**.
-2. Select **NVIDIA**, paste your API key (get one at https://build.nvidia.com).
-3. Pick a model from the rated list (recommended: DeepSeek V4 Pro, 9.8/10) or enter a custom model ID.
+2. Select **NVIDIA** (key from https://build.nvidia.com) or **OpenRouter** (key from https://openrouter.ai/keys). Each provider keeps its own API key.
+3. Pick a model from the list (NVIDIA shows suitability ratings with a recommended pick; OpenRouter shows a curated best-first list) or enter a custom model ID.
 
-The key is stored via VS Code `SecretStorage` — never in `settings.json`.
+The keys are stored via VS Code `SecretStorage` — never in `settings.json`. Note: `commitforge.model` is shared, so switching providers via Configure Provider also updates the model to one valid for that provider. If you flip `commitforge.provider` by hand, re-run Configure Provider to pick a matching model.
 
 ## Usage
 
 - Stage changes, then run **CommitForge: Generate Commit Message** from the Command Palette, or click the CommitForge button in the Source Control title bar.
 - If nothing is staged you'll be asked: generate from unstaged changes, stage all, or cancel.
 - Diffs are scanned for secrets first (see below).
-- Pick **Use Message** to write into the SCM input box (never auto-commits), **Regenerate**, or **Cancel**.
+- The message is written straight into the Source Control commit box (never auto-committed) — review it and commit when ready. A notification offers **Regenerate** if you want another try.
 
 ## Settings
 
@@ -38,7 +38,7 @@ The key is stored via VS Code `SecretStorage` — never in `settings.json`.
 | `commitforge.provider` | `"nvidia"` | AI provider used to generate commit messages. |
 | `commitforge.model` | `"deepseek-ai/deepseek-v4-pro-0813"` | Model ID for the active provider. Change via Configure Provider (rated picker: DeepSeek V4 Pro 9.8 down to Llama 3.3 70B 8.5). |
 | `commitforge.commitStyle` | `"conventional"` | `conventional` \| `simple` \| `gitmoji` \| `custom`. |
-| `commitforge.maxDiffSize` | `15000` | Max diff chars before per-file truncation (largest files summarized first; lockfiles/generated files always summarized). |
+| `commitforge.maxDiffSize` | `30000` | Max diff chars before per-file truncation (largest files summarized first; lockfiles/generated files always summarized). |
 | `commitforge.customInstructions` | `""` | Extra prompt guidance (required content when style is `custom`). |
 
 ## Secret scanning
@@ -57,7 +57,7 @@ Before any diff leaves your machine, CommitForge scans for AWS keys, `API_KEY=`/
    }
    ```
 2. Register it in `ProviderManager`'s constructor map.
-3. Add the id to the `commitforge.provider` enum in `package.json` — one line. Nothing else changes: commands and `extension.ts` only talk to `AIProvider`/`ProviderManager`, and NVIDIA specifics live only in `NvidiaProvider.ts` + the settings schema.
+3. Add the id to the `commitforge.provider` enum in `package.json` — one line. Nothing else changes: commands and `extension.ts` only talk to `AIProvider`/`ProviderManager`, and provider specifics live only in the provider class + the settings schema. (OpenRouter was added exactly this way — see `src/providers/OpenRouterProvider.ts`. Shared prompt/parse/sanitize helpers live in `src/providers/chatUtils.ts`.)
 
 ## Development
 

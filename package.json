@@ -56,7 +56,8 @@
         "commitforge.provider": {
           "type": "string",
           "enum": [
-            "nvidia"
+            "nvidia",
+            "openrouter"
           ],
           "default": "nvidia",
           "description": "AI provider used to generate commit messages."
@@ -79,7 +80,7 @@
         },
         "commitforge.maxDiffSize": {
           "type": "number",
-          "default": 15000,
+          "default": 30000,
           "description": "Maximum diff size in characters before per-file truncation kicks in."
         },
         "commitforge.customInstructions": {

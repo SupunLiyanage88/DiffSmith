@@ -3,7 +3,7 @@ import { GitService } from '../git/GitService';
 import { scanDiff, redactDiff } from '../security/SecretScanner';
 import { ProviderManager, ProviderNotConfiguredError } from '../providers/ProviderManager';
 import { getSettings } from '../config/Settings';
-import { showCommitMessage } from '../ui/CommitMessagePanel';
+import { writeMessageToScmInputBox } from '../ui/CommitMessagePanel';
 
 function humanizeError(e: unknown): string {
   if (e instanceof ProviderNotConfiguredError) {
@@ -180,9 +180,21 @@ export function registerGenerateCommit(
     }
 
     output.appendLine(`[CommitForge] Generated (${provider.id}): ${message}`);
-    await showCommitMessage(message, async () => {
-      // Regenerate callback
+    // Write straight into the SCM commit box — never auto-commit.
+    const written = await writeMessageToScmInputBox(message);
+    if (!written) {
+      await vscode.env.clipboard.writeText(message);
+      void vscode.window.showInformationMessage(
+        'CommitForge: SCM input box unavailable — message copied to clipboard.'
+      );
+      return;
+    }
+    const action = await vscode.window.showInformationMessage(
+      'CommitForge: message written to the commit box — review before committing.',
+      'Regenerate'
+    );
+    if (action === 'Regenerate') {
       void vscode.commands.executeCommand('commitforge.generateCommit');
-    });
+    }
   });
 }
