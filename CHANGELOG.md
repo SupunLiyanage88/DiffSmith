@@ -2,7 +2,7 @@
 
 All notable changes to CommitForge will be documented here.
 
-## [Unreleased]
+## [0.1.0] — 2026-09-05
 
 - OpenRouter provider: pick NVIDIA or OpenRouter in `Configure Provider`, each with its own API key (SecretStorage) and model picker. Curated catalog defaults to `openrouter/free` (Free Models Router); handles 402 (credits exhausted) and routing-error payloads.
 - Shared `chatUtils.ts`: prompt builders, reasoning-dump sanitizer, and response parser reused by all providers.

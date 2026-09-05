@@ -2,7 +2,7 @@
   "name": "commitforge",
   "displayName": "CommitForge",
   "description": "Generate git commit messages using AI (NVIDIA first, multi-provider ready).",
-  "version": "0.0.1",
+  "version": "0.1.0",
   "publisher": "SupunLiyanage",
   "license": "MIT",
   "repository": {
