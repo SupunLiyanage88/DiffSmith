@@ -25,7 +25,8 @@
     "commands": [
       {
         "command": "commitforge.generateCommit",
-        "title": "CommitForge: Generate Commit Message"
+        "title": "CommitForge: Generate Commit Message",
+        "icon": "$(sparkle)"
       },
       {
         "command": "commitforge.configureProvider",
