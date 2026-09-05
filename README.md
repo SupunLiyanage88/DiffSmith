@@ -1,3 +1,7 @@
+<p align="center">
+  <img src="images/CommitForge_logo.png" width="512" alt="CommitForge logo">
+</p>
+
 # CommitForge
 
 AI-powered git commit message generation for VS Code. Supports **NVIDIA** (DeepSeek V4 Pro by default, rated model picker included) and **OpenRouter** (400+ models through one key), designed from day one to support more providers without rewrites.

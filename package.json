@@ -1,6 +1,7 @@
 {
   "name": "commitforge",
   "displayName": "CommitForge",
+  "icon": "images/CommitForge_logo.png",
   "description": "Generate git commit messages using AI (NVIDIA first, multi-provider ready).",
   "version": "0.1.0",
   "publisher": "SupunLiyanage",
