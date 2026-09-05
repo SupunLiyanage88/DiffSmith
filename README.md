@@ -30,7 +30,7 @@ The keys are stored via VS Code `SecretStorage` — never in `settings.json`. No
 
 ## Usage
 
-- Stage changes, then run **DiffSmith: Generate Commit Message** from the Command Palette, or click the DiffSmith button in the Source Control title bar.
+- Stage changes, then press the DiffSmith button <img src="images/icon.png" width="18" alt="DiffSmith generate icon"> in the Source Control title bar (top-right of the Source Control view, next to the `…` menu) — or run **DiffSmith: Generate Commit Message** from the Command Palette (`Ctrl+Shift+P`).
 - If nothing is staged you'll be asked: generate from unstaged changes, stage all, or cancel.
 - Diffs are scanned for secrets first (see below).
 - The message is written straight into the Source Control commit box (never auto-committed) — review it and commit when ready. A notification offers **Regenerate** if you want another try.
