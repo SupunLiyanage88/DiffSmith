@@ -1,0 +1,102 @@
+{
+  "name": "commitforge",
+  "displayName": "CommitForge",
+  "description": "Generate git commit messages using AI (NVIDIA first, multi-provider ready).",
+  "version": "0.0.1",
+  "publisher": "your-publisher-id",
+  "engines": {
+    "vscode": "^1.85.0"
+  },
+  "categories": [
+    "SCM Providers",
+    "Other"
+  ],
+  "activationEvents": [
+    "onCommand:commitforge.generateCommit",
+    "onCommand:commitforge.configureProvider"
+  ],
+  "main": "./out/extension.js",
+  "contributes": {
+    "commands": [
+      {
+        "command": "commitforge.generateCommit",
+        "title": "CommitForge: Generate Commit Message"
+      },
+      {
+        "command": "commitforge.configureProvider",
+        "title": "CommitForge: Configure Provider"
+      }
+    ],
+    "menus": {
+      "commandPalette": [
+        {
+          "command": "commitforge.generateCommit",
+          "when": "gitOpenRepositoryCount >= 1"
+        },
+        {
+          "command": "commitforge.configureProvider"
+        }
+      ],
+      "scm/title": [
+        {
+          "command": "commitforge.generateCommit",
+          "group": "navigation",
+          "when": "scmProvider == git"
+        }
+      ]
+    },
+    "configuration": {
+      "title": "CommitForge",
+      "properties": {
+        "commitforge.provider": {
+          "type": "string",
+          "enum": [
+            "nvidia"
+          ],
+          "default": "nvidia",
+          "description": "AI provider used to generate commit messages."
+        },
+        "commitforge.model": {
+          "type": "string",
+          "default": "meta/llama-3.1-8b-instruct",
+          "description": "Model ID for the active provider (e.g. meta/llama-3.1-8b-instruct for NVIDIA)."
+        },
+        "commitforge.commitStyle": {
+          "type": "string",
+          "enum": [
+            "conventional",
+            "simple",
+            "gitmoji",
+            "custom"
+          ],
+          "default": "conventional",
+          "description": "Commit message style."
+        },
+        "commitforge.maxDiffSize": {
+          "type": "number",
+          "default": 15000,
+          "description": "Maximum diff size in characters before per-file truncation kicks in."
+        },
+        "commitforge.customInstructions": {
+          "type": "string",
+          "default": "",
+          "description": "Custom instructions appended to the prompt when commitStyle is 'custom' (or extra guidance for any style)."
+        }
+      }
+    }
+  },
+  "scripts": {
+    "vscode:prepublish": "npm run compile",
+    "compile": "tsc -p ./",
+    "watch": "tsc -watch -p ./",
+    "pretest": "npm run compile",
+    "lint": "eslint src --ext ts"
+  },
+  "devDependencies": {
+    "@types/mocha": "^10.0.6",
+    "@types/node": "^20.11.0",
+    "@types/vscode": "^1.85.0",
+    "eslint": "^8.57.0",
+    "typescript": "^5.4.0"
+  }
+}
