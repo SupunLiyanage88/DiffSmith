@@ -27,7 +27,10 @@
       {
         "command": "diffsmith.generateCommit",
         "title": "DiffSmith: Generate Commit Message",
-        "icon": "$(sparkle)"
+        "icon": {
+          "light": "images/icon.png",
+          "dark": "images/icon-dark.png"
+        }
       },
       {
         "command": "diffsmith.configureProvider",
