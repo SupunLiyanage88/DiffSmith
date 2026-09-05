@@ -36,14 +36,14 @@ export function registerGenerateCommit(
   providerManager: ProviderManager,
   output: vscode.OutputChannel
 ): vscode.Disposable {
-  return vscode.commands.registerCommand('commitforge.generateCommit', async () => {
+  return vscode.commands.registerCommand('diffsmith.generateCommit', async () => {
     const settings = getSettings();
     const git = new GitService();
 
     // 0. No git repo / no workspace → friendly message, no API call.
     if (!vscode.workspace.workspaceFolders || vscode.workspace.workspaceFolders.length === 0) {
       void vscode.window.showInformationMessage(
-        'CommitForge: open a folder with a git repository first.'
+        'DiffSmith: open a folder with a git repository first.'
       );
       return;
     }
@@ -53,18 +53,18 @@ export function registerGenerateCommit(
       diffResult = await git.getDiff(settings.maxDiffSize);
     } catch (e) {
       const retry = await vscode.window.showErrorMessage(
-        `CommitForge: could not read git diff. ${humanizeError(e)}`,
+        `DiffSmith: could not read git diff. ${humanizeError(e)}`,
         'Retry'
       );
       if (retry === 'Retry') {
-        void vscode.commands.executeCommand('commitforge.generateCommit');
+        void vscode.commands.executeCommand('diffsmith.generateCommit');
       }
       return;
     }
 
     if (!diffResult) {
       void vscode.window.showInformationMessage(
-        'CommitForge: no changes found (nothing staged or unstaged). Stage or edit files first — no API call was made.'
+        'DiffSmith: no changes found (nothing staged or unstaged). Stage or edit files first — no API call was made.'
       );
       return;
     }
@@ -72,7 +72,7 @@ export function registerGenerateCommit(
     if (diffResult.truncated) {
       const omitted = diffResult.omittedFiles.length > 0 ? `: ${diffResult.omittedFiles.join(', ')}` : '';
       void vscode.window.showWarningMessage(
-        `CommitForge: diff exceeded ${settings.maxDiffSize} chars and was truncated${omitted}.`
+        `DiffSmith: diff exceeded ${settings.maxDiffSize} chars and was truncated${omitted}.`
       );
     }
 
@@ -93,7 +93,7 @@ export function registerGenerateCommit(
       );
       if (choice === 'Redact and continue') {
         diffToSend = redactDiff(diffToSend);
-        output.appendLine('[CommitForge] Secrets redacted before sending.');
+        output.appendLine('[DiffSmith] Secrets redacted before sending.');
       } else if (choice === 'Send anyway') {
         // proceed with original diff
       } else {
@@ -107,11 +107,11 @@ export function registerGenerateCommit(
     } catch (e) {
       if (e instanceof ProviderNotConfiguredError) {
         const action = await vscode.window.showErrorMessage(
-          'CommitForge: API key is not set.',
+          'DiffSmith: API key is not set.',
           'Configure now'
         );
         if (action === 'Configure now') {
-          void vscode.commands.executeCommand('commitforge.configureProvider');
+          void vscode.commands.executeCommand('diffsmith.configureProvider');
         }
         return;
       }
@@ -143,23 +143,23 @@ export function registerGenerateCommit(
       message = await vscode.window.withProgress(
         {
           location: vscode.ProgressLocation.Notification,
-          title: 'CommitForge: generating commit message',
+          title: 'DiffSmith: generating commit message',
           cancellable: true,
         },
         generate
       );
     } catch (e) {
       const cause = humanizeError(e);
-      output.appendLine(`[CommitForge] Generation failed (${provider.id}/${settings.model}): ${cause}`);
+      output.appendLine(`[DiffSmith] Generation failed (${provider.id}/${settings.model}): ${cause}`);
       const action = await vscode.window.showErrorMessage(
-        `CommitForge: generation failed — ${cause}`,
+        `DiffSmith: generation failed — ${cause}`,
         'Retry',
         'Configure Provider'
       );
       if (action === 'Retry') {
-        void vscode.commands.executeCommand('commitforge.generateCommit');
+        void vscode.commands.executeCommand('diffsmith.generateCommit');
       } else if (action === 'Configure Provider') {
-        void vscode.commands.executeCommand('commitforge.configureProvider');
+        void vscode.commands.executeCommand('diffsmith.configureProvider');
       }
       return;
     }
@@ -170,31 +170,31 @@ export function registerGenerateCommit(
     }
     if (message.trim().length === 0) {
       const action = await vscode.window.showErrorMessage(
-        'CommitForge: provider returned an empty message.',
+        'DiffSmith: provider returned an empty message.',
         'Retry'
       );
       if (action === 'Retry') {
-        void vscode.commands.executeCommand('commitforge.generateCommit');
+        void vscode.commands.executeCommand('diffsmith.generateCommit');
       }
       return;
     }
 
-    output.appendLine(`[CommitForge] Generated (${provider.id}): ${message}`);
+    output.appendLine(`[DiffSmith] Generated (${provider.id}): ${message}`);
     // Write straight into the SCM commit box — never auto-commit.
     const written = await writeMessageToScmInputBox(message);
     if (!written) {
       await vscode.env.clipboard.writeText(message);
       void vscode.window.showInformationMessage(
-        'CommitForge: SCM input box unavailable — message copied to clipboard.'
+        'DiffSmith: SCM input box unavailable — message copied to clipboard.'
       );
       return;
     }
     const action = await vscode.window.showInformationMessage(
-      'CommitForge: message written to the commit box — review before committing.',
+      'DiffSmith: message written to the commit box — review before committing.',
       'Regenerate'
     );
     if (action === 'Regenerate') {
-      void vscode.commands.executeCommand('commitforge.generateCommit');
+      void vscode.commands.executeCommand('diffsmith.generateCommit');
     }
   });
 }

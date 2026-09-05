@@ -30,7 +30,7 @@ async function hasGitRepo(): Promise<boolean> {
 }
 
 export async function activate(context: vscode.ExtensionContext): Promise<void> {
-  const output = vscode.window.createOutputChannel('CommitForge');
+  const output = vscode.window.createOutputChannel('DiffSmith');
   const providerManager = new ProviderManager(context);
 
   context.subscriptions.push(
@@ -44,7 +44,7 @@ export async function activate(context: vscode.ExtensionContext): Promise<void> 
   if (!(await hasGitRepo()) && !repoWarningShown) {
     repoWarningShown = true;
     void vscode.window.showInformationMessage(
-      'CommitForge: no git repository detected in the open workspace. Open a git repo to generate commit messages.'
+      'DiffSmith: no git repository detected in the open workspace. Open a git repo to generate commit messages.'
     );
   }
 }

@@ -1,7 +1,7 @@
 import * as vscode from 'vscode';
 import { CommitStyle } from '../providers/AIProvider';
 
-export interface CommitForgeSettings {
+export interface DiffSmithSettings {
   provider: string;
   model: string;
   commitStyle: CommitStyle;
@@ -11,8 +11,8 @@ export interface CommitForgeSettings {
 
 const VALID_STYLES: CommitStyle[] = ['conventional', 'simple', 'gitmoji', 'custom'];
 
-export function getSettings(): CommitForgeSettings {
-  const cfg = vscode.workspace.getConfiguration('commitforge');
+export function getSettings(): DiffSmithSettings {
+  const cfg = vscode.workspace.getConfiguration('diffsmith');
   const rawStyle = cfg.get<string>('commitStyle', 'conventional');
   const commitStyle: CommitStyle = VALID_STYLES.includes(rawStyle as CommitStyle)
     ? (rawStyle as CommitStyle)
@@ -31,5 +31,5 @@ export async function updateSetting(
   value: string | number,
   target: vscode.ConfigurationTarget = vscode.ConfigurationTarget.Global
 ): Promise<void> {
-  await vscode.workspace.getConfiguration('commitforge').update(key, value, target);
+  await vscode.workspace.getConfiguration('diffsmith').update(key, value, target);
 }

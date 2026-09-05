@@ -1,7 +1,7 @@
 {
-  "name": "commitforge",
-  "displayName": "CommitForge",
-  "icon": "images/CommitForge_logo.png",
+  "name": "diffsmith",
+  "displayName": "DiffSmith",
+  "icon": "images/DiffSmith_logo.png",
   "description": "Generate git commit messages using AI (NVIDIA first, multi-provider ready).",
   "version": "0.1.0",
   "publisher": "SupunLiyanage",
@@ -18,44 +18,44 @@
     "Other"
   ],
   "activationEvents": [
-    "onCommand:commitforge.generateCommit",
-    "onCommand:commitforge.configureProvider"
+    "onCommand:diffsmith.generateCommit",
+    "onCommand:diffsmith.configureProvider"
   ],
   "main": "./out/extension.js",
   "contributes": {
     "commands": [
       {
-        "command": "commitforge.generateCommit",
-        "title": "CommitForge: Generate Commit Message",
+        "command": "diffsmith.generateCommit",
+        "title": "DiffSmith: Generate Commit Message",
         "icon": "$(sparkle)"
       },
       {
-        "command": "commitforge.configureProvider",
-        "title": "CommitForge: Configure Provider"
+        "command": "diffsmith.configureProvider",
+        "title": "DiffSmith: Configure Provider"
       }
     ],
     "menus": {
       "commandPalette": [
         {
-          "command": "commitforge.generateCommit",
+          "command": "diffsmith.generateCommit",
           "when": "gitOpenRepositoryCount >= 1"
         },
         {
-          "command": "commitforge.configureProvider"
+          "command": "diffsmith.configureProvider"
         }
       ],
       "scm/title": [
         {
-          "command": "commitforge.generateCommit",
+          "command": "diffsmith.generateCommit",
           "group": "navigation",
           "when": "scmProvider == git"
         }
       ]
     },
     "configuration": {
-      "title": "CommitForge",
+      "title": "DiffSmith",
       "properties": {
-        "commitforge.provider": {
+        "diffsmith.provider": {
           "type": "string",
           "enum": [
             "nvidia",
@@ -64,12 +64,12 @@
           "default": "nvidia",
           "description": "AI provider used to generate commit messages."
         },
-        "commitforge.model": {
+        "diffsmith.model": {
           "type": "string",
           "default": "deepseek-ai/deepseek-v4-pro-0813",
-          "description": "Model ID for the active provider. Change it via CommitForge: Configure Provider, which shows rated recommendations."
+          "description": "Model ID for the active provider. Change it via DiffSmith: Configure Provider, which shows rated recommendations."
         },
-        "commitforge.commitStyle": {
+        "diffsmith.commitStyle": {
           "type": "string",
           "enum": [
             "conventional",
@@ -80,12 +80,12 @@
           "default": "conventional",
           "description": "Commit message style."
         },
-        "commitforge.maxDiffSize": {
+        "diffsmith.maxDiffSize": {
           "type": "number",
           "default": 30000,
           "description": "Maximum diff size in characters before per-file truncation kicks in."
         },
-        "commitforge.customInstructions": {
+        "diffsmith.customInstructions": {
           "type": "string",
           "default": "",
           "description": "Custom instructions appended to the prompt when commitStyle is 'custom' (or extra guidance for any style)."

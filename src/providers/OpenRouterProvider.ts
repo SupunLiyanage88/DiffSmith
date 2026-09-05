@@ -9,9 +9,9 @@ import {
 } from './chatUtils';
 
 const OPENROUTER_API_URL = 'https://openrouter.ai/api/v1/chat/completions';
-const SECRET_KEY = 'commitforge.openrouter.apiKey';
+const SECRET_KEY = 'diffsmith.openrouter.apiKey';
 const APP_URL = 'https://github.com/SupunLiyanage88/CommitForge';
-const APP_TITLE = 'CommitForge';
+const APP_TITLE = 'DiffSmith';
 
 export interface OpenRouterModelOption {
   id: string;
@@ -57,7 +57,7 @@ export class OpenRouterProvider implements AIProvider {
     const { getSettings, updateSetting } = await import('../config/Settings');
     const existing = await context.secrets.get(SECRET_KEY);
     const key = await vscode.window.showInputBox({
-      title: 'CommitForge: OpenRouter API Key',
+      title: 'DiffSmith: OpenRouter API Key',
       prompt: 'Enter your OpenRouter API key (stored securely in SecretStorage, never in settings.json). Get one at https://openrouter.ai/keys',
       password: true,
       ignoreFocusOut: true,
@@ -67,7 +67,7 @@ export class OpenRouterProvider implements AIProvider {
       return; // cancelled
     }
     if (key.trim().length === 0) {
-      void vscode.window.showWarningMessage('CommitForge: empty key — OpenRouter provider is not configured.');
+      void vscode.window.showWarningMessage('DiffSmith: empty key — OpenRouter provider is not configured.');
       return;
     }
     await context.secrets.store(SECRET_KEY, key.trim());
@@ -89,7 +89,7 @@ export class OpenRouterProvider implements AIProvider {
       isCustom: true,
     });
     const picked = await vscode.window.showQuickPick(picks, {
-      title: 'CommitForge: OpenRouter Model',
+      title: 'DiffSmith: OpenRouter Model',
       placeHolder: currentModel,
       ignoreFocusOut: true,
     });
@@ -99,7 +99,7 @@ export class OpenRouterProvider implements AIProvider {
     let next: string | undefined;
     if (picked.isCustom) {
       const input = await vscode.window.showInputBox({
-        title: 'CommitForge: Custom OpenRouter Model',
+        title: 'DiffSmith: Custom OpenRouter Model',
         prompt: 'Enter any OpenRouter model ID (provider/model-name)',
         value: currentModel,
         ignoreFocusOut: true,
@@ -109,7 +109,7 @@ export class OpenRouterProvider implements AIProvider {
       }
       next = input.trim();
       if (next.length === 0) {
-        void vscode.window.showWarningMessage('CommitForge: empty model — keeping the current one.');
+        void vscode.window.showWarningMessage('DiffSmith: empty model — keeping the current one.');
         return;
       }
     } else {
@@ -119,7 +119,7 @@ export class OpenRouterProvider implements AIProvider {
       await updateSetting('model', next);
     }
     void vscode.window.showInformationMessage(
-      `CommitForge: OpenRouter provider configured (${getOpenRouterModelLabel(next ?? currentModel)}).`
+      `DiffSmith: OpenRouter provider configured (${getOpenRouterModelLabel(next ?? currentModel)}).`
     );
   }
 
@@ -127,7 +127,7 @@ export class OpenRouterProvider implements AIProvider {
     const apiKey = await this.getApiKey();
     if (!apiKey) {
       throw apiError(
-        'OpenRouter API key is not set. Run "CommitForge: Configure Provider" to set it.',
+        'OpenRouter API key is not set. Run "DiffSmith: Configure Provider" to set it.',
         'NOT_CONFIGURED'
       );
     }
@@ -169,7 +169,7 @@ export class OpenRouterProvider implements AIProvider {
 
       if (res.status === 401) {
         throw apiError(
-          'Invalid OpenRouter API key (401). Check your key via "CommitForge: Configure Provider".',
+          'Invalid OpenRouter API key (401). Check your key via "DiffSmith: Configure Provider".',
           'UNAUTHORIZED'
         );
       }

@@ -6,11 +6,11 @@ export function registerConfigureProvider(
   context: vscode.ExtensionContext,
   providerManager: ProviderManager
 ): vscode.Disposable {
-  return vscode.commands.registerCommand('commitforge.configureProvider', async () => {
+  return vscode.commands.registerCommand('diffsmith.configureProvider', async () => {
     const providers = providerManager.listProviders();
     const picked = await vscode.window.showQuickPick(
       providers.map((p) => ({ label: p.displayName, description: p.id, provider: p })),
-      { title: 'CommitForge: Select AI Provider', ignoreFocusOut: true }
+      { title: 'DiffSmith: Select AI Provider', ignoreFocusOut: true }
     );
     if (!picked) {
       return;
@@ -25,7 +25,7 @@ export function registerConfigureProvider(
       await picked.provider.configure(context);
     } else {
       void vscode.window.showInformationMessage(
-        `CommitForge: provider "${picked.provider.id}" selected.`
+        `DiffSmith: provider "${picked.provider.id}" selected.`
       );
     }
   });
