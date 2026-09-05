@@ -19,7 +19,7 @@ export function getSettings(): CommitForgeSettings {
     : 'conventional';
   return {
     provider: cfg.get<string>('provider', 'nvidia'),
-    model: cfg.get<string>('model', 'meta/llama-3.1-8b-instruct'),
+    model: cfg.get<string>('model', 'deepseek-ai/deepseek-v4-pro-0813'),
     commitStyle,
     maxDiffSize: cfg.get<number>('maxDiffSize', 15000),
     customInstructions: cfg.get<string>('customInstructions', ''),

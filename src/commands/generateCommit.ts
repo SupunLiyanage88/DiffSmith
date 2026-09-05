@@ -150,6 +150,7 @@ export function registerGenerateCommit(
       );
     } catch (e) {
       const cause = humanizeError(e);
+      output.appendLine(`[CommitForge] Generation failed (${provider.id}/${settings.model}): ${cause}`);
       const action = await vscode.window.showErrorMessage(
         `CommitForge: generation failed — ${cause}`,
         'Retry',

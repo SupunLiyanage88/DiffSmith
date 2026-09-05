@@ -1,6 +1,6 @@
 # CommitForge
 
-AI-powered git commit message generation for VS Code. Currently supports **NVIDIA** (`meta/llama-3.1-8b-instruct` by default), designed from day one to support more providers without rewrites.
+AI-powered git commit message generation for VS Code. Currently supports **NVIDIA** (DeepSeek V4 Pro by default, rated model picker included), designed from day one to support more providers without rewrites.
 
 ## Install
 
@@ -20,7 +20,7 @@ AI-powered git commit message generation for VS Code. Currently supports **NVIDI
 
 1. Open the Command Palette → **CommitForge: Configure Provider**.
 2. Select **NVIDIA**, paste your API key (get one at https://build.nvidia.com).
-3. Optionally override the model (default: `meta/llama-3.1-8b-instruct`).
+3. Pick a model from the rated list (recommended: DeepSeek V4 Pro, 9.8/10) or enter a custom model ID.
 
 The key is stored via VS Code `SecretStorage` — never in `settings.json`.
 
@@ -36,7 +36,7 @@ The key is stored via VS Code `SecretStorage` — never in `settings.json`.
 | Setting | Default | Description |
 |---|---|---|
 | `commitforge.provider` | `"nvidia"` | AI provider used to generate commit messages. |
-| `commitforge.model` | `"meta/llama-3.1-8b-instruct"` | Model ID for the active provider. |
+| `commitforge.model` | `"deepseek-ai/deepseek-v4-pro-0813"` | Model ID for the active provider. Change via Configure Provider (rated picker: DeepSeek V4 Pro 9.8 down to Llama 3.3 70B 8.5). |
 | `commitforge.commitStyle` | `"conventional"` | `conventional` \| `simple` \| `gitmoji` \| `custom`. |
 | `commitforge.maxDiffSize` | `15000` | Max diff chars before per-file truncation (largest files summarized first; lockfiles/generated files always summarized). |
 | `commitforge.customInstructions` | `""` | Extra prompt guidance (required content when style is `custom`). |
