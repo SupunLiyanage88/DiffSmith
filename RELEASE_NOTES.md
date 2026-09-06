@@ -1,26 +1,25 @@
-# CommitLoom v0.1.0 — AI commit messages for VS Code
+# CommitLoom v0.1.1 — NVIDIA generation fixes
 
-First public release of CommitLoom — generate git commit messages with AI, in one click from Source Control.
+This patch release fixes NVIDIA empty-response issues and improves provider switching. OpenRouter is the recommended option for the most reliable commit-message generation experience.
 
-## Providers
+## What's changed
 
-- **NVIDIA** — rated model picker (DeepSeek V4 Pro 9.8 recommended)
-- **OpenRouter** — curated catalog defaulting to the Free Models Router, any `provider/model` ID supported
-- Each provider keeps its own API key in VS Code SecretStorage — never in settings
+- Disable thinking for NVIDIA's DeepSeek V4 and Nemotron Lightning models so they can produce a finished commit message within the output budget.
+- Give other NVIDIA models more output tokens and allow NVIDIA requests up to 120 seconds to finish.
+- Reject unfinished answers and reasoning-only output, with clearer guidance when generation fails.
+- Remove unavailable NVIDIA models from the picker and explain unavailable-model errors.
+- Reset the shared model setting when switching providers, so cancelling setup still leaves the new provider's default in place.
+- Add nine automated provider regression tests, including OpenRouter generation checks.
 
-## Highlights
+## Install or update
 
-- One-click generate button in the Source Control title bar + Command Palette
-- Message auto-fills the commit box — never auto-commits, you always review
-- Secret scanning before anything leaves your machine (redact / send anyway / cancel)
-- Conventional, simple, gitmoji, or custom styles
-- Per-file diff truncation with omitted-file reporting
-- Reasoning-model support, retry on failure, failure details in the Output channel
+1. Download `commitloom-0.1.1.vsix` from this release.
+2. In VS Code, open Extensions (`Ctrl+Shift+X`) → `…` → **Install from VSIX…** and select the file.
+3. Reload VS Code if prompted.
+4. Run **CommitLoom: Configure Provider** to choose OpenRouter (recommended) or NVIDIA and select a model. Existing API keys remain in VS Code SecretStorage.
 
-## Install
+## Coming soon
 
-1. Download `commitloom-0.1.0.vsix` below
-2. VS Code → Extensions (`Ctrl+Shift+X`) → `…` → Install from VSIX
-3. `Ctrl+Shift+P` → CommitLoom: Configure Provider → paste your NVIDIA key (build.nvidia.com) or OpenRouter key (openrouter.ai/keys)
+Local Ollama model support is planned for a future release. It is not included in 0.1.1.
 
-Full changelog: [CHANGELOG.md](https://github.com/SupunLiyanage88/CommitForge/blob/main/CHANGELOG.md)
+Full changelog: [CHANGELOG.md](https://github.com/SupunLiyanage88/CommitLoom/blob/main/CHANGELOG.md)

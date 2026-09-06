@@ -2,13 +2,14 @@
 
 All notable changes to CommitLoom will be documented here.
 
-## [Unreleased]
+## [0.1.1] — 2026-09-06
 
 - Fix NVIDIA empty responses by disabling thinking for DeepSeek V4 and Nemotron Lightning, allowing more output tokens for other models, and extending the NVIDIA timeout to 120 seconds.
 - Reject unfinished NVIDIA answers and reasoning-only responses with actionable errors.
 - Remove NVIDIA picker entries absent from the hosted model catalog and explain unavailable-model errors.
 - Use provider-specific defaults when the model setting is empty; reset the shared model when switching providers, including cancelled setup.
 - Add provider regression tests (`npm test`).
+- Recommend OpenRouter for the most reliable experience and document planned local Ollama support.
 
 ## [0.1.0] — 2026-09-05
 

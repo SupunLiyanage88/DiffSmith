@@ -20,10 +20,10 @@ Generate meaningful git commit messages with AI — in one click, right from Sou
 
 **From the VS Code Marketplace** (once published): open the Extensions view (`Ctrl+Shift+X`), search **CommitLoom**, click Install.
 
-**From a `.vsix` file**: Extensions view → `…` menu → **Install from VSIX…** → pick `commitloom-0.1.0.vsix`. Or from a terminal:
+**From a `.vsix` file**: Extensions view → `…` menu → **Install from VSIX…** → pick `commitloom-0.1.1.vsix`. Or from a terminal:
 
 ```sh
-code --install-extension commitloom-0.1.0.vsix
+code --install-extension commitloom-0.1.1.vsix
 ```
 
 ## Get an API key

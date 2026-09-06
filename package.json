@@ -3,7 +3,7 @@
   "displayName": "CommitLoom",
   "icon": "images/CommitLoom_logo.png",
   "description": "Generate meaningful git commit messages with AI — NVIDIA & OpenRouter, one click from Source Control.",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "publisher": "SupunLiyanage",
   "license": "MIT",
   "repository": {
