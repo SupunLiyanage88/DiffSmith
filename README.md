@@ -48,7 +48,7 @@ You need **one** key — either NVIDIA or OpenRouter. Keys are stored in VS Code
 ## How it works
 
 1. **Stage your changes** in Source Control (`git add`, or stage in the UI).
-2. Press the Diffly button <img src="images/icon_v2.png" width="18" alt="Diffly generate icon"> in the Source Control title bar (top-right of the Source Control view) — or run **Diffly: Generate Commit Message** from the Command Palette.
+2. Press the Diffly button <img src="images/icon_v-dark2.png" width="18" alt="Diffly generate icon"> in the Source Control title bar (top-right of the Source Control view) — or run **Diffly: Generate Commit Message** from the Command Palette.
 3. If nothing is staged, Diffly asks: generate from unstaged changes, stage everything, or cancel.
 4. Your diff is **scanned for secrets first**. If anything looks like a key or token, you choose: **Redact and continue**, **Send anyway**, or **Cancel**.
 5. The AI writes your commit message and drops it **straight into the commit box**. Review it, tweak if you like, then commit yourself. A notification offers **Regenerate** for another try.
