@@ -4,13 +4,15 @@ All notable changes to Diffly will be documented here.
 
 ## [0.1.0] — 2026-09-05
 
-- OpenRouter provider: pick NVIDIA or OpenRouter in `Configure Provider`, each with its own API key (SecretStorage) and model picker. Curated catalog defaults to `openrouter/free` (Free Models Router); handles 402 (credits exhausted) and routing-error payloads.
-- Shared `chatUtils.ts`: prompt builders, reasoning-dump sanitizer, and response parser reused by all providers.
-- Auto-fill: generated messages go straight into the SCM commit box (no picker); a notification offers Regenerate. Default `maxDiffSize` raised 15000 → 30000.
+First public release under the Diffly name.
 
-- Rated NVIDIA model catalog (DeepSeek V4 Pro 9.8 through Llama 3.3 70B 8.5); `Configure Provider` now shows a model picker with ratings and the recommendation instead of a free-text field. Default model is now `deepseek-ai/deepseek-v4-pro-0813`.
-- Reasoning-dump sanitizer: provider output is now extracted to just the commit message; unparsable output fails with Retry instead of inserting junk.
-- Reasoning-model support: `reasoning_content`/`reasoning` fields are now read as fallback when `content` is empty (DeepSeek family); default token budget raised 300 → 1000; failures are logged to the Output channel with the model ID.
+- Two providers: NVIDIA (rated model picker, DeepSeek V4 Pro 9.8 by default) and OpenRouter (curated catalog defaulting to the Free Models Router, custom IDs supported) — each with its own API key in SecretStorage and its own model picker. Handles 402 (credits exhausted) and routing-error payloads.
+- Shared `chatUtils.ts`: prompt builders, reasoning-dump sanitizer, and response parser reused by all providers.
+- Reasoning-model support: `reasoning_content`/`reasoning` fields read as fallback when `content` is empty; token budget 300 → 1000; failures logged to the Output channel with the model ID.
+- Auto-fill: generated messages go straight into the SCM commit box (no picker, never auto-commits); a notification offers Regenerate. Custom toolbar icon with light/dark variants.
+- Secret scanner with Redact / Send anyway / Cancel; documented examples no longer false-positive.
+- Per-file diff truncation with omitted-file reporting; default `maxDiffSize` 15000 → 30000.
+- Commit styles: conventional, simple, gitmoji, custom (+ custom instructions).
 
 ## [0.0.1] — 2026-09-06
 
