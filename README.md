@@ -4,66 +4,75 @@
 
 # Diffly
 
-AI-powered git commit message generation for VS Code. Supports **NVIDIA** (DeepSeek V4 Pro by default, rated model picker included) and **OpenRouter** (400+ models through one key), designed from day one to support more providers without rewrites.
+Generate meaningful git commit messages with AI — in one click, right from Source Control. Supports **NVIDIA** and **OpenRouter**, with secret scanning built in.
+
+## Features
+
+- ✨ One-click generation from the Source Control title bar or Command Palette
+- 🤖 Two providers: NVIDIA (rated model picker) and OpenRouter (400+ models, free tier available)
+- 📝 Conventional, simple, gitmoji, or fully custom commit styles
+- 🔒 Diffs are scanned for secrets **before** anything leaves your machine
+- ✍️ Messages auto-fill the commit box — never auto-committed, you always review first
 
 ## Install
 
-1. Clone/copy this folder, then:
-   ```sh
-   npm install
-   npm run compile
-   ```
-2. Press `F5` in VS Code to launch the Extension Development Host, or package with `vsce`:
-   ```sh
-   npm install -g @vscode/vsce
-   vsce package
-   ```
+**From the VS Code Marketplace** (once published): open the Extensions view (`Ctrl+Shift+X`), search **Diffly**, click Install.
 
-## Set up a provider (NVIDIA / OpenRouter)
+**From a `.vsix` file**: Extensions view → `…` menu → **Install from VSIX…** → pick `diffly-0.1.0.vsix`. Or from a terminal:
 
-1. Open the Command Palette → **Diffly: Configure Provider**.
-2. Select **NVIDIA** (key from https://build.nvidia.com) or **OpenRouter** (key from https://openrouter.ai/keys). Each provider keeps its own API key.
-3. Pick a model from the list (NVIDIA shows suitability ratings with a recommended pick; OpenRouter shows a curated best-first list) or enter a custom model ID.
+```sh
+code --install-extension diffly-0.1.0.vsix
+```
 
-The keys are stored via VS Code `SecretStorage` — never in `settings.json`. Note: `diffly.model` is shared, so switching providers via Configure Provider also updates the model to one valid for that provider. If you flip `diffly.provider` by hand, re-run Configure Provider to pick a matching model.
+## Get an API key
 
-## Usage
+You need **one** key — either NVIDIA or OpenRouter. Keys are stored in VS Code SecretStorage, never in `settings.json`.
 
-- Stage changes, then press the Diffly button <img src="images/icon_v2.png" width="18" alt="Diffly generate icon"> in the Source Control title bar (top-right of the Source Control view, next to the `…` menu) — or run **Diffly: Generate Commit Message** from the Command Palette (`Ctrl+Shift+P`).
-- If nothing is staged you'll be asked: generate from unstaged changes, stage all, or cancel.
-- Diffs are scanned for secrets first (see below).
-- The message is written straight into the Source Control commit box (never auto-committed) — review it and commit when ready. A notification offers **Regenerate** if you want another try.
+### NVIDIA (free to start)
+
+1. Go to [build.nvidia.com](https://build.nvidia.com) and sign in (or create a free NVIDIA account).
+2. Open your profile menu → **API Keys** (or visit `build.nvidia.com` → keys section).
+3. Click **Generate Key**, give it a name, and copy it — it's shown only once.
+4. Back in VS Code: `Ctrl+Shift+P` → **Diffly: Configure Provider** → **NVIDIA** → paste the key.
+5. Pick a model (recommended: DeepSeek V4 Pro) or enter a custom model ID.
+
+### OpenRouter (free tier available)
+
+1. Go to [openrouter.ai](https://openrouter.ai) and sign up / sign in.
+2. Open the **Keys** page: [openrouter.ai/keys](https://openrouter.ai/keys).
+3. Click **Create Key**, name it (e.g. `Diffly`), and copy it — it's shown only once.
+4. Back in VS Code: `Ctrl+Shift+P` → **Diffly: Configure Provider** → **OpenRouter** → paste the key.
+5. Pick a model (default: Free Models Router — no credits needed) or enter any `provider/model` ID from [openrouter.ai/models](https://openrouter.ai/models).
+6. Optional: paid models need credits — top up at [openrouter.ai/credits](https://openrouter.ai/credits).
+
+## How it works
+
+1. **Stage your changes** in Source Control (`git add`, or stage in the UI).
+2. Press the Diffly button <img src="images/icon_v2.png" width="18" alt="Diffly generate icon"> in the Source Control title bar (top-right of the Source Control view) — or run **Diffly: Generate Commit Message** from the Command Palette.
+3. If nothing is staged, Diffly asks: generate from unstaged changes, stage everything, or cancel.
+4. Your diff is **scanned for secrets first**. If anything looks like a key or token, you choose: **Redact and continue**, **Send anyway**, or **Cancel**.
+5. The AI writes your commit message and drops it **straight into the commit box**. Review it, tweak if you like, then commit yourself. A notification offers **Regenerate** for another try.
+
+Large diffs are truncated per file (largest first, lockfiles always summarized) and you'll be told which files were summarized.
 
 ## Settings
 
 | Setting | Default | Description |
 |---|---|---|
-| `diffly.provider` | `"nvidia"` | AI provider used to generate commit messages. |
-| `diffly.model` | `"deepseek-ai/deepseek-v4-pro-0813"` | Model ID for the active provider. Change via Configure Provider (rated picker: DeepSeek V4 Pro 9.8 down to Llama 3.3 70B 8.5). |
+| `diffly.provider` | `"nvidia"` | AI provider: `nvidia` or `openrouter`. Switch via Configure Provider. |
+| `diffly.model` | (provider default) | Model ID. Change via Configure Provider (rated/catalog picker or custom ID). |
 | `diffly.commitStyle` | `"conventional"` | `conventional` \| `simple` \| `gitmoji` \| `custom`. |
-| `diffly.maxDiffSize` | `30000` | Max diff chars before per-file truncation (largest files summarized first; lockfiles/generated files always summarized). |
-| `diffly.customInstructions` | `""` | Extra prompt guidance (required content when style is `custom`). |
+| `diffly.maxDiffSize` | `30000` | Max diff characters before per-file truncation kicks in. |
+| `diffly.customInstructions` | `""` | Extra prompt guidance (used as the style when `commitStyle` is `custom`). |
 
-## Secret scanning
+> `diffly.model` is shared between providers — switching providers via **Configure Provider** also updates the model to one valid for that provider.
 
-Before any diff leaves your machine, Diffly scans for AWS keys, `API_KEY=`/`SECRET=`/`TOKEN=` assignments, private key headers, known token formats, and `.env`-style files. On a hit you choose **Redact and continue** (values → `[REDACTED]`), **Send anyway**, or **Cancel**.
+## Privacy & security
 
-## Adding providers (OpenAI, Gemini, Ollama, Claude…)
+- Diffs are sent to the selected AI provider **only** to generate the message — nothing else.
+- Secret scanning runs locally before any network call.
+- API keys live in VS Code SecretStorage, never in settings files or the repo.
 
-1. Create `src/providers/<Name>Provider.ts` implementing the `AIProvider` interface in `src/providers/AIProvider.ts`:
-   ```ts
-   export interface AIProvider {
-     readonly id: string;
-     readonly displayName: string;
-     isConfigured(): Promise<boolean>; // works keyless too (e.g. ping a local Ollama endpoint)
-     generateCommitMessage(diff: string, options: GenerateOptions): Promise<string>;
-   }
-   ```
-2. Register it in `ProviderManager`'s constructor map.
-3. Add the id to the `diffly.provider` enum in `package.json` — one line. Nothing else changes: commands and `extension.ts` only talk to `AIProvider`/`ProviderManager`, and provider specifics live only in the provider class + the settings schema. (OpenRouter was added exactly this way — see `src/providers/OpenRouterProvider.ts`. Shared prompt/parse/sanitize helpers live in `src/providers/chatUtils.ts`.)
+## Contributing
 
-## Development
-
-- `npm run compile` — typecheck + build to `out/`
-- `npm run watch` — incremental build
-- Test per phase: `F5` → Extension Host → run `Diffly: Configure Provider`, stage a change, run `Diffly: Generate Commit Message`.
+See [CONTRIBUTING.md](CONTRIBUTING.md) for build instructions and the provider architecture.

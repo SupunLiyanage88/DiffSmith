@@ -14,7 +14,9 @@ export interface SecretFinding {
 const SECRET_PATTERNS: { name: string; regex: RegExp }[] = [
   { name: 'AWS access key', regex: /\bAKIA[0-9A-Z]{16}\b/g },
   { name: 'AWS secret key assignment', regex: /aws_secret_access_key\s*[:=]\s*['"]?[A-Za-z0-9/+=]{16,}['"]?/gi },
-  { name: 'Generic API key/secret/token', regex: /\b(API_KEY|APIKEY|API_SECRET|SECRET|TOKEN|ACCESS_TOKEN)\b\s*[:=]\s*['"]?[^'"\s]{8,}['"]?/gi },
+  // Note: backtick is excluded from values so documented examples like
+  // `API_KEY=` in READMEs don't flag (real keys never contain backticks).
+  { name: 'Generic API key/secret/token', regex: /\b(API_KEY|APIKEY|API_SECRET|SECRET|TOKEN|ACCESS_TOKEN)\b\s*[:=]\s*['"]?[^'"\s`]{8,}['"]?/gi },
   { name: 'Private key header', regex: /-----BEGIN (?:RSA |EC |DSA |OPENSSH )?PRIVATE KEY-----/g },
   { name: 'GitHub token', regex: /\bgh[pousr]_[A-Za-z0-9]{20,}\b/g },
   { name: 'Slack token', regex: /\bxox[baprs]-[A-Za-z0-9-]{10,}\b/g },
@@ -85,7 +87,7 @@ export function redactDiff(diff: string): string {
     /\bAKIA[0-9A-Z]{16}\b/g,
     // -----BEGIN PRIVATE KEY----- blocks: redact following base64 lines (heuristic: redact header line value)
     // Assignments: KEY=secretvalue -> KEY=[REDACTED]
-    /(\b(?:API_KEY|APIKEY|API_SECRET|SECRET|TOKEN|ACCESS_TOKEN|aws_secret_access_key|HEROKU_API_KEY)\b\s*[:=]\s*['"]?)([^'"\s]+)(['"]?)/gi,
+    /(\b(?:API_KEY|APIKEY|API_SECRET|SECRET|TOKEN|ACCESS_TOKEN|aws_secret_access_key|HEROKU_API_KEY)\b\s*[:=]\s*['"]?)([^'"\s`]+)(['"]?)/gi,
     /\b(gh[pousr]_[A-Za-z0-9]{20,}|xox[baprs]-[A-Za-z0-9-]{10,}|AIza[0-9A-Za-z_-]{20,})\b/g,
   ];
   redacted = redacted.replace(valuePatterns[0], '[REDACTED]');

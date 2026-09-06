@@ -2,7 +2,7 @@
   "name": "diffly",
   "displayName": "Diffly",
   "icon": "images/Diffly_logo.png",
-  "description": "Generate git commit messages using AI (NVIDIA first, multi-provider ready).",
+  "description": "Generate meaningful git commit messages with AI — NVIDIA & OpenRouter, one click from Source Control.",
   "version": "0.1.0",
   "publisher": "SupunLiyanage",
   "license": "MIT",
