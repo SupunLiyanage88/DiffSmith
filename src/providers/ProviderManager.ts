@@ -7,7 +7,7 @@ import { getSettings } from '../config/Settings';
 export class ProviderNotConfiguredError extends Error {
   constructor(providerId: string) {
     super(
-      `AI provider "${providerId}" is not configured (missing API key or unreachable endpoint). Run "DiffSmith: Configure Provider" to fix this.`
+      `AI provider "${providerId}" is not configured (missing API key or unreachable endpoint). Run "Diffly: Configure Provider" to fix this.`
     );
     this.name = 'ProviderNotConfiguredError';
     (this as Error & { code?: string }).code = 'NOT_CONFIGURED';

@@ -1,7 +1,7 @@
 {
-  "name": "diffsmith",
-  "displayName": "DiffSmith",
-  "icon": "images/DiffSmith_logo.png",
+  "name": "diffly",
+  "displayName": "Diffly",
+  "icon": "images/Diffly_logo.png",
   "description": "Generate git commit messages using AI (NVIDIA first, multi-provider ready).",
   "version": "0.1.0",
   "publisher": "SupunLiyanage",
@@ -18,47 +18,47 @@
     "Other"
   ],
   "activationEvents": [
-    "onCommand:diffsmith.generateCommit",
-    "onCommand:diffsmith.configureProvider"
+    "onCommand:diffly.generateCommit",
+    "onCommand:diffly.configureProvider"
   ],
   "main": "./out/extension.js",
   "contributes": {
     "commands": [
       {
-        "command": "diffsmith.generateCommit",
-        "title": "DiffSmith: Generate Commit Message",
+        "command": "diffly.generateCommit",
+        "title": "Diffly: Generate Commit Message",
         "icon": {
-          "light": "images/icon.png",
-          "dark": "images/icon-dark.png"
+          "light": "images/Diffly_logo.png",
+          "dark": "images/Diffly_logo.png"
         }
       },
       {
-        "command": "diffsmith.configureProvider",
-        "title": "DiffSmith: Configure Provider"
+        "command": "diffly.configureProvider",
+        "title": "Diffly: Configure Provider"
       }
     ],
     "menus": {
       "commandPalette": [
         {
-          "command": "diffsmith.generateCommit",
+          "command": "diffly.generateCommit",
           "when": "gitOpenRepositoryCount >= 1"
         },
         {
-          "command": "diffsmith.configureProvider"
+          "command": "diffly.configureProvider"
         }
       ],
       "scm/title": [
         {
-          "command": "diffsmith.generateCommit",
+          "command": "diffly.generateCommit",
           "group": "navigation",
           "when": "scmProvider == git"
         }
       ]
     },
     "configuration": {
-      "title": "DiffSmith",
+      "title": "Diffly",
       "properties": {
-        "diffsmith.provider": {
+        "diffly.provider": {
           "type": "string",
           "enum": [
             "nvidia",
@@ -67,12 +67,12 @@
           "default": "nvidia",
           "description": "AI provider used to generate commit messages."
         },
-        "diffsmith.model": {
+        "diffly.model": {
           "type": "string",
           "default": "deepseek-ai/deepseek-v4-pro-0813",
-          "description": "Model ID for the active provider. Change it via DiffSmith: Configure Provider, which shows rated recommendations."
+          "description": "Model ID for the active provider. Change it via Diffly: Configure Provider, which shows rated recommendations."
         },
-        "diffsmith.commitStyle": {
+        "diffly.commitStyle": {
           "type": "string",
           "enum": [
             "conventional",
@@ -83,12 +83,12 @@
           "default": "conventional",
           "description": "Commit message style."
         },
-        "diffsmith.maxDiffSize": {
+        "diffly.maxDiffSize": {
           "type": "number",
           "default": 30000,
           "description": "Maximum diff size in characters before per-file truncation kicks in."
         },
-        "diffsmith.customInstructions": {
+        "diffly.customInstructions": {
           "type": "string",
           "default": "",
           "description": "Custom instructions appended to the prompt when commitStyle is 'custom' (or extra guidance for any style)."

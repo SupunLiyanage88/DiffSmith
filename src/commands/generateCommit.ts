@@ -36,14 +36,14 @@ export function registerGenerateCommit(
   providerManager: ProviderManager,
   output: vscode.OutputChannel
 ): vscode.Disposable {
-  return vscode.commands.registerCommand('diffsmith.generateCommit', async () => {
+  return vscode.commands.registerCommand('diffly.generateCommit', async () => {
     const settings = getSettings();
     const git = new GitService();
 
     // 0. No git repo / no workspace → friendly message, no API call.
     if (!vscode.workspace.workspaceFolders || vscode.workspace.workspaceFolders.length === 0) {
       void vscode.window.showInformationMessage(
-        'DiffSmith: open a folder with a git repository first.'
+        'Diffly: open a folder with a git repository first.'
       );
       return;
     }
@@ -53,18 +53,18 @@ export function registerGenerateCommit(
       diffResult = await git.getDiff(settings.maxDiffSize);
     } catch (e) {
       const retry = await vscode.window.showErrorMessage(
-        `DiffSmith: could not read git diff. ${humanizeError(e)}`,
+        `Diffly: could not read git diff. ${humanizeError(e)}`,
         'Retry'
       );
       if (retry === 'Retry') {
-        void vscode.commands.executeCommand('diffsmith.generateCommit');
+        void vscode.commands.executeCommand('diffly.generateCommit');
       }
       return;
     }
 
     if (!diffResult) {
       void vscode.window.showInformationMessage(
-        'DiffSmith: no changes found (nothing staged or unstaged). Stage or edit files first — no API call was made.'
+        'Diffly: no changes found (nothing staged or unstaged). Stage or edit files first — no API call was made.'
       );
       return;
     }
@@ -72,7 +72,7 @@ export function registerGenerateCommit(
     if (diffResult.truncated) {
       const omitted = diffResult.omittedFiles.length > 0 ? `: ${diffResult.omittedFiles.join(', ')}` : '';
       void vscode.window.showWarningMessage(
-        `DiffSmith: diff exceeded ${settings.maxDiffSize} chars and was truncated${omitted}.`
+        `Diffly: diff exceeded ${settings.maxDiffSize} chars and was truncated${omitted}.`
       );
     }
 
@@ -93,7 +93,7 @@ export function registerGenerateCommit(
       );
       if (choice === 'Redact and continue') {
         diffToSend = redactDiff(diffToSend);
-        output.appendLine('[DiffSmith] Secrets redacted before sending.');
+        output.appendLine('[Diffly] Secrets redacted before sending.');
       } else if (choice === 'Send anyway') {
         // proceed with original diff
       } else {
@@ -107,11 +107,11 @@ export function registerGenerateCommit(
     } catch (e) {
       if (e instanceof ProviderNotConfiguredError) {
         const action = await vscode.window.showErrorMessage(
-          'DiffSmith: API key is not set.',
+          'Diffly: API key is not set.',
           'Configure now'
         );
         if (action === 'Configure now') {
-          void vscode.commands.executeCommand('diffsmith.configureProvider');
+          void vscode.commands.executeCommand('diffly.configureProvider');
         }
         return;
       }
@@ -143,23 +143,23 @@ export function registerGenerateCommit(
       message = await vscode.window.withProgress(
         {
           location: vscode.ProgressLocation.Notification,
-          title: 'DiffSmith: generating commit message',
+          title: 'Diffly: generating commit message',
           cancellable: true,
         },
         generate
       );
     } catch (e) {
       const cause = humanizeError(e);
-      output.appendLine(`[DiffSmith] Generation failed (${provider.id}/${settings.model}): ${cause}`);
+      output.appendLine(`[Diffly] Generation failed (${provider.id}/${settings.model}): ${cause}`);
       const action = await vscode.window.showErrorMessage(
-        `DiffSmith: generation failed — ${cause}`,
+        `Diffly: generation failed — ${cause}`,
         'Retry',
         'Configure Provider'
       );
       if (action === 'Retry') {
-        void vscode.commands.executeCommand('diffsmith.generateCommit');
+        void vscode.commands.executeCommand('diffly.generateCommit');
       } else if (action === 'Configure Provider') {
-        void vscode.commands.executeCommand('diffsmith.configureProvider');
+        void vscode.commands.executeCommand('diffly.configureProvider');
       }
       return;
     }
@@ -170,31 +170,31 @@ export function registerGenerateCommit(
     }
     if (message.trim().length === 0) {
       const action = await vscode.window.showErrorMessage(
-        'DiffSmith: provider returned an empty message.',
+        'Diffly: provider returned an empty message.',
         'Retry'
       );
       if (action === 'Retry') {
-        void vscode.commands.executeCommand('diffsmith.generateCommit');
+        void vscode.commands.executeCommand('diffly.generateCommit');
       }
       return;
     }
 
-    output.appendLine(`[DiffSmith] Generated (${provider.id}): ${message}`);
+    output.appendLine(`[Diffly] Generated (${provider.id}): ${message}`);
     // Write straight into the SCM commit box — never auto-commit.
     const written = await writeMessageToScmInputBox(message);
     if (!written) {
       await vscode.env.clipboard.writeText(message);
       void vscode.window.showInformationMessage(
-        'DiffSmith: SCM input box unavailable — message copied to clipboard.'
+        'Diffly: SCM input box unavailable — message copied to clipboard.'
       );
       return;
     }
     const action = await vscode.window.showInformationMessage(
-      'DiffSmith: message written to the commit box — review before committing.',
+      'Diffly: message written to the commit box — review before committing.',
       'Regenerate'
     );
     if (action === 'Regenerate') {
-      void vscode.commands.executeCommand('diffsmith.generateCommit');
+      void vscode.commands.executeCommand('diffly.generateCommit');
     }
   });
 }

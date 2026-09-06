@@ -1,7 +1,7 @@
 import * as vscode from 'vscode';
 import { CommitStyle } from '../providers/AIProvider';
 
-export interface DiffSmithSettings {
+export interface DifflySettings {
   provider: string;
   model: string;
   commitStyle: CommitStyle;
@@ -11,8 +11,8 @@ export interface DiffSmithSettings {
 
 const VALID_STYLES: CommitStyle[] = ['conventional', 'simple', 'gitmoji', 'custom'];
 
-export function getSettings(): DiffSmithSettings {
-  const cfg = vscode.workspace.getConfiguration('diffsmith');
+export function getSettings(): DifflySettings {
+  const cfg = vscode.workspace.getConfiguration('diffly');
   const rawStyle = cfg.get<string>('commitStyle', 'conventional');
   const commitStyle: CommitStyle = VALID_STYLES.includes(rawStyle as CommitStyle)
     ? (rawStyle as CommitStyle)
@@ -31,5 +31,5 @@ export async function updateSetting(
   value: string | number,
   target: vscode.ConfigurationTarget = vscode.ConfigurationTarget.Global
 ): Promise<void> {
-  await vscode.workspace.getConfiguration('diffsmith').update(key, value, target);
+  await vscode.workspace.getConfiguration('diffly').update(key, value, target);
 }
