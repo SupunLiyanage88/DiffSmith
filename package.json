@@ -28,8 +28,8 @@
         "command": "diffly.generateCommit",
         "title": "Diffly: Generate Commit Message",
         "icon": {
-          "light": "images/Diffly_logo.png",
-          "dark": "images/Diffly_logo.png"
+          "light": "images/icon_v2.png",
+          "dark": "images/icon_v2-dark.png"
         }
       },
       {
