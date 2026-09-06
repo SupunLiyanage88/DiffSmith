@@ -18,7 +18,6 @@ AI-powered git commit message generation for VS Code. Supports **NVIDIA** (DeepS
    npm install -g @vscode/vsce
    vsce package
    ```
-3. Replace `your-publisher-id` in `package.json` with your publisher id before publishing.
 
 ## Set up a provider (NVIDIA / OpenRouter)
 
