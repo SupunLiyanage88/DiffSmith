@@ -1,4 +1,4 @@
-# Contributing to Diffly
+# Contributing to CommitLoom
 
 ## Build from source
 
@@ -30,11 +30,11 @@ vsce package
    ```
 
 2. Register it in `ProviderManager`'s constructor map.
-3. Add the id to the `diffly.provider` enum in `package.json` — one line. Nothing else changes: commands and `extension.ts` only talk to `AIProvider`/`ProviderManager`, and provider specifics live only in the provider class + the settings schema. (OpenRouter was added exactly this way — see `src/providers/OpenRouterProvider.ts`. Shared prompt/parse/sanitize helpers live in `src/providers/chatUtils.ts`.)
+3. Add the id to the `commitloom.provider` enum in `package.json` — one line. Nothing else changes: commands and `extension.ts` only talk to `AIProvider`/`ProviderManager`, and provider specifics live only in the provider class + the settings schema. (OpenRouter was added exactly this way — see `src/providers/OpenRouterProvider.ts`. Shared prompt/parse/sanitize helpers live in `src/providers/chatUtils.ts`.)
 
 ## Testing changes
 
-`F5` → Extension Host → run `Diffly: Configure Provider`, stage a change, run `Diffly: Generate Commit Message`.
+`F5` → Extension Host → run `CommitLoom: Configure Provider`, stage a change, run `CommitLoom: Generate Commit Message`.
 
 ## Architecture notes
 

@@ -6,11 +6,11 @@ export function registerConfigureProvider(
   context: vscode.ExtensionContext,
   providerManager: ProviderManager
 ): vscode.Disposable {
-  return vscode.commands.registerCommand('diffly.configureProvider', async () => {
+  return vscode.commands.registerCommand('commitloom.configureProvider', async () => {
     const providers = providerManager.listProviders();
     const picked = await vscode.window.showQuickPick(
       providers.map((p) => ({ label: p.displayName, description: p.id, provider: p })),
-      { title: 'Diffly: Select AI Provider', ignoreFocusOut: true }
+      { title: 'CommitLoom: Select AI Provider', ignoreFocusOut: true }
     );
     if (!picked) {
       return;
@@ -25,7 +25,7 @@ export function registerConfigureProvider(
       await picked.provider.configure(context);
     } else {
       void vscode.window.showInformationMessage(
-        `Diffly: provider "${picked.provider.id}" selected.`
+        `CommitLoom: provider "${picked.provider.id}" selected.`
       );
     }
   });

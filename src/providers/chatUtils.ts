@@ -200,7 +200,7 @@ export function parseChatResponse(
   }
   throw apiError(
     `The AI provider (${model}) returned an empty response. Retry generation — ` +
-      'if it persists, try a different model via "Diffly: Configure Provider".',
+      'if it persists, try a different model via "CommitLoom: Configure Provider".',
     'EMPTY_RESPONSE'
   );
 }
