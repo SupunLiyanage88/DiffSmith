@@ -16,16 +16,6 @@ Generate meaningful git commit messages with AI — in one click, right from Sou
 - 🔒 Diffs are scanned for secrets **before** anything leaves your machine
 - ✍️ Messages auto-fill the commit box — never auto-committed, you always review first
 
-## Install
-
-**From the VS Code Marketplace** (once published): open the Extensions view (`Ctrl+Shift+X`), search **CommitLoom**, click Install.
-
-**From a `.vsix` file**: Extensions view → `…` menu → **Install from VSIX…** → pick `commitloom-0.1.1.vsix`. Or from a terminal:
-
-```sh
-code --install-extension commitloom-0.1.1.vsix
-```
-
 ## Get an API key
 
 You need **one** key — either NVIDIA or OpenRouter. Keys are stored in VS Code SecretStorage, never in `settings.json`.
