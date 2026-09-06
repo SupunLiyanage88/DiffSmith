@@ -34,6 +34,8 @@ vsce package
 
 ## Testing changes
 
+Run `npm test` to compile and run provider regression tests with mocked API responses (no API keys required).
+
 `F5` → Extension Host → run `CommitLoom: Configure Provider`, stage a change, run `CommitLoom: Generate Commit Message`.
 
 ## Architecture notes

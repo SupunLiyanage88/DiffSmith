@@ -152,7 +152,8 @@ export function sanitizeCommitMessage(raw: string, style: CommitStyle): string {
 
 export interface ChatCompletionData {
   choices?: Array<{
-    message?: { content?: string; reasoning_content?: string; reasoning?: string };
+    finish_reason?: string | null;
+    message?: { content?: string | null; reasoning_content?: string | null; reasoning?: string | null };
   }>;
   /** Some gateways (e.g. OpenRouter routing failures) return a top-level error with HTTP 200. */
   error?: { message?: string; code?: number | string };

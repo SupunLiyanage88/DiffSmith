@@ -19,7 +19,7 @@ export function getSettings(): CommitLoomSettings {
     : 'conventional';
   return {
     provider: cfg.get<string>('provider', 'nvidia'),
-    model: cfg.get<string>('model', 'deepseek-ai/deepseek-v4-pro-0813'),
+    model: cfg.get<string>('model', ''),
     commitStyle,
     maxDiffSize: cfg.get<number>('maxDiffSize', 30000),
     customInstructions: cfg.get<string>('customInstructions', ''),

@@ -18,10 +18,10 @@ function humanizeError(e: unknown): string {
       return e.message;
     }
     if (code === 'TIMEOUT') {
-      return 'Request timed out. Check your network connection and retry.';
+      return e.message;
     }
     if (code === 'EMPTY_RESPONSE') {
-      return 'The AI provider returned an empty response. Retry generation.';
+      return e.message;
     }
     if (/ENOTFOUND|ECONNREFUSED|Failed to fetch|fetch failed|network/i.test(e.message)) {
       return `Network error: ${e.message}`;

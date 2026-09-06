@@ -1,6 +1,6 @@
 import * as vscode from 'vscode';
 import { ProviderManager } from '../providers/ProviderManager';
-import { updateSetting } from '../config/Settings';
+import { getSettings, updateSetting } from '../config/Settings';
 
 export function registerConfigureProvider(
   context: vscode.ExtensionContext,
@@ -16,6 +16,11 @@ export function registerConfigureProvider(
       return;
     }
 
+    // Reset the shared model before switching so cancelling setup cannot send
+    // the previous provider's model ID to the new endpoint.
+    if (getSettings().provider !== picked.provider.id) {
+      await updateSetting('model', '');
+    }
     // Persist provider selection (provider enum grows one entry per new provider class).
     await updateSetting('provider', picked.provider.id);
 

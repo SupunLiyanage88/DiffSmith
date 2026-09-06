@@ -6,6 +6,8 @@
 
 Generate meaningful git commit messages with AI — in one click, right from Source Control. Supports **NVIDIA** and **OpenRouter**, with secret scanning built in.
 
+**Recommended: OpenRouter** for the most reliable commit-message generation experience in CommitLoom.
+
 ## Features
 
 - ✨ One-click generation from the Source Control title bar or Command Palette
@@ -28,15 +30,7 @@ code --install-extension commitloom-0.1.0.vsix
 
 You need **one** key — either NVIDIA or OpenRouter. Keys are stored in VS Code SecretStorage, never in `settings.json`.
 
-### NVIDIA (free to start)
-
-1. Go to [build.nvidia.com](https://build.nvidia.com) and sign in (or create a free NVIDIA account).
-2. Open your profile menu → **API Keys** (or visit `build.nvidia.com` → keys section).
-3. Click **Generate Key**, give it a name, and copy it — it's shown only once.
-4. Back in VS Code: `Ctrl+Shift+P` → **CommitLoom: Configure Provider** → **NVIDIA** → paste the key.
-5. Pick a model (recommended: DeepSeek V4 Pro) or enter a custom model ID.
-
-### OpenRouter (free tier available)
+### OpenRouter (recommended, free tier available)
 
 1. Go to [openrouter.ai](https://openrouter.ai) and sign up / sign in.
 2. Open the **Keys** page: [openrouter.ai/keys](https://openrouter.ai/keys).
@@ -44,6 +38,14 @@ You need **one** key — either NVIDIA or OpenRouter. Keys are stored in VS Code
 4. Back in VS Code: `Ctrl+Shift+P` → **CommitLoom: Configure Provider** → **OpenRouter** → paste the key.
 5. Pick a model (default: Free Models Router — no credits needed) or enter any `provider/model` ID from [openrouter.ai/models](https://openrouter.ai/models).
 6. Optional: paid models need credits — top up at [openrouter.ai/credits](https://openrouter.ai/credits).
+
+### NVIDIA (free to start)
+
+1. Go to [build.nvidia.com](https://build.nvidia.com) and sign in (or create a free NVIDIA account).
+2. Open your profile menu → **API Keys** (or visit `build.nvidia.com` → keys section).
+3. Click **Generate Key**, give it a name, and copy it — it's shown only once.
+4. Back in VS Code: `Ctrl+Shift+P` → **CommitLoom: Configure Provider** → **NVIDIA** → paste the key.
+5. Pick a model (recommended: DeepSeek V4 Pro) or enter a custom model ID.
 
 ## How it works
 
@@ -65,13 +67,21 @@ Large diffs are truncated per file (largest first, lockfiles always summarized) 
 | `commitloom.maxDiffSize` | `30000` | Max diff characters before per-file truncation kicks in. |
 | `commitloom.customInstructions` | `""` | Extra prompt guidance (used as the style when `commitStyle` is `custom`). |
 
-> `commitloom.model` is shared between providers — switching providers via **Configure Provider** also updates the model to one valid for that provider.
+> `commitloom.model` is shared between providers. Leave it empty to use the provider default. Switching providers via **Configure Provider** resets it before model selection, so cancelling setup still leaves a valid default.
+
+### NVIDIA troubleshooting
+
+If NVIDIA returns an empty message, choose **DeepSeek V4 Pro** or **Nemotron 3.5 Lightning** via **Configure Provider**. CommitLoom disables thinking for these models so the output budget goes to the commit message. Other NVIDIA models receive a larger output budget, and NVIDIA requests can take up to 120 seconds. If a saved model is no longer available, select a current model from the picker.
 
 ## Privacy & security
 
 - Diffs are sent to the selected AI provider **only** to generate the message — nothing else.
 - Secret scanning runs locally before any network call.
 - API keys live in VS Code SecretStorage, never in settings files or the repo.
+
+## Future work
+
+**Local Ollama model support is coming soon.** This planned integration will let you generate commit messages using models running on your own machine. Ollama support is not available in the current release.
 
 ## Contributing
 

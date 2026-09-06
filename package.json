@@ -69,8 +69,8 @@
         },
         "commitloom.model": {
           "type": "string",
-          "default": "deepseek-ai/deepseek-v4-pro-0813",
-          "description": "Model ID for the active provider. Change it via CommitLoom: Configure Provider, which shows rated recommendations."
+          "default": "",
+          "description": "Model ID for the active provider. Leave empty to use the provider default. Change it via CommitLoom: Configure Provider, which shows rated recommendations."
         },
         "commitloom.commitStyle": {
           "type": "string",
@@ -101,6 +101,7 @@
     "compile": "tsc -p ./",
     "watch": "tsc -watch -p ./",
     "pretest": "npm run compile",
+    "test": "node --test test/*.test.cjs",
     "lint": "eslint src --ext ts"
   },
   "devDependencies": {

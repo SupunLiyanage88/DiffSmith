@@ -1,6 +1,6 @@
 import * as vscode from 'vscode';
 import { AIProvider, GenerateOptions } from './AIProvider';
-import { buildSystemPrompt, buildUserPrompt, parseChatResponse } from './chatUtils';
+import { apiError, buildSystemPrompt, buildUserPrompt, ChatCompletionData, parseChatResponse } from './chatUtils';
 
 const NVIDIA_API_URL = 'https://integrate.api.nvidia.com/v1/chat/completions';
 const SECRET_KEY = 'commitloom.nvidia.apiKey';
@@ -17,10 +17,7 @@ export const NVIDIA_MODELS: NvidiaModelOption[] = [
   { id: 'deepseek-ai/deepseek-v4-pro-0813', label: 'DeepSeek V4 Pro', rating: 9.8 },
   { id: 'deepseek-ai/deepseek-v4-flash-0731', label: 'DeepSeek V4 Flash', rating: 9.5 },
   { id: 'nvidia/nemotron-3.5-lightning-30b-a3b', label: 'Nemotron 3.5 Lightning 30B', rating: 9.2 },
-  { id: 'z-ai/glm-5.2', label: 'GLM-5.2', rating: 9.0 },
   { id: 'minimaxai/minimax-m3', label: 'MiniMax M3', rating: 8.8 },
-  { id: 'meta/llama-3.3-70b-instruct', label: 'Llama 3.3 70B Instruct', rating: 8.5 },
-  { id: 'meta/llama-3.1-8b-instruct', label: 'Llama 3.1 8B Instruct (previous default)' },
 ];
 
 const DEFAULT_MODEL = NVIDIA_MODELS[0].id;
@@ -116,14 +113,21 @@ export class NvidiaProvider implements AIProvider {
   }
 
   async generateCommitMessage(diff: string, options: GenerateOptions): Promise<string> {
-    const apiKey = await this.getApiKey();
+    const apiKey = (await this.getApiKey())?.trim();
     if (!apiKey) {
       const err = new Error('NVIDIA API key is not set. Run "CommitLoom: Configure Provider" to set it.');
       (err as Error & { code?: string }).code = 'NOT_CONFIGURED';
       throw err;
     }
 
-    const model = options.model || DEFAULT_MODEL;
+    const model = options.model?.trim() || DEFAULT_MODEL;
+    // NVIDIA's thinking switches are model-specific and belong at the top
+    // level of the REST body (extra_body is only an OpenAI SDK option).
+    const chatTemplateKwargs = model.startsWith('deepseek-ai/deepseek-v4-')
+      ? { thinking: false }
+      : model === 'nvidia/nemotron-3.5-lightning-30b-a3b'
+        ? { enable_thinking: false }
+        : undefined;
     const systemPrompt = buildSystemPrompt(options.commitStyle, options.customInstructions);
     const userPrompt = buildUserPrompt(
       options.changedFiles,
@@ -133,7 +137,7 @@ export class NvidiaProvider implements AIProvider {
     );
 
     const controller = new AbortController();
-    const timeoutMs = 60_000;
+    const timeoutMs = 120_000;
     const timeout = setTimeout(() => controller.abort(), timeoutMs);
 
     try {
@@ -141,6 +145,7 @@ export class NvidiaProvider implements AIProvider {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
+          Accept: 'application/json',
           Authorization: `Bearer ${apiKey}`,
         },
         body: JSON.stringify({
@@ -150,8 +155,10 @@ export class NvidiaProvider implements AIProvider {
             { role: 'user', content: userPrompt },
           ],
           temperature: 0.3,
-          // Generous headroom: reasoning models spend tokens thinking before answering.
-          max_tokens: options.maxTokens ?? 1000,
+          stream: false,
+          chat_template_kwargs: chatTemplateKwargs,
+          // Models without a thinking switch need room for reasoning + the answer.
+          max_tokens: options.maxTokens ?? (chatTemplateKwargs ? 1024 : 8192),
         }),
         signal: controller.signal,
       });
@@ -166,6 +173,12 @@ export class NvidiaProvider implements AIProvider {
         (err as Error & { code?: string }).code = 'RATE_LIMITED';
         throw err;
       }
+      if (res.status === 404) {
+        throw apiError(
+          `NVIDIA model "${model}" is unavailable (404). Choose a current model via "CommitLoom: Configure Provider".`,
+          'MODEL_UNAVAILABLE'
+        );
+      }
       if (!res.ok) {
         const text = await res.text().catch(() => '');
         const err = new Error(`NVIDIA API request failed (${res.status}): ${text.slice(0, 300)}`);
@@ -173,15 +186,22 @@ export class NvidiaProvider implements AIProvider {
         throw err;
       }
 
-      const data = (await res.json()) as {
-        choices?: Array<{
-          message?: { content?: string; reasoning_content?: string; reasoning?: string };
-        }>;
-      };
-      return parseChatResponse(data, options.commitStyle, model);
+      const data = (await res.json()) as ChatCompletionData;
+      const choice = data.choices?.[0];
+      if (!data.error && choice?.finish_reason === 'length') {
+        throw apiError(
+          `NVIDIA model "${model}" reached its output limit before finishing. Choose DeepSeek V4 Pro or Nemotron Lightning via "CommitLoom: Configure Provider" and retry.`,
+          'OUTPUT_LIMIT'
+        );
+      }
+      // Reasoning is not a finished answer, even when it contains a draft subject.
+      return parseChatResponse({
+        ...data,
+        choices: [{ message: { content: choice?.message?.content } }],
+      }, options.commitStyle, model);
     } catch (e) {
       if (e instanceof Error && e.name === 'AbortError') {
-        const err = new Error('Request timed out after 60s.');
+        const err = new Error('NVIDIA request timed out after 120s. Retry or choose a faster model via "CommitLoom: Configure Provider".');
         (err as Error & { code?: string }).code = 'TIMEOUT';
         throw err;
       }
